@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Lock, Mail, LogIn } from "lucide-react"
 
 export default function LoginPage() {
@@ -74,12 +75,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md shadow-professional-lg animate-fade-in">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Acesse sua conta para controlar o estoque</CardDescription>
+          <CardTitle className="text-2xl text-center">Login</CardTitle>
+          <CardDescription className="text-center">Acesse sua conta para controlar o estoque</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -100,10 +101,9 @@ export default function LoginPage() {
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                <PasswordInput
                   id="password"
-                  type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -124,7 +124,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 space-y-3">
+          <div className="space-y-3">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border"></div>
@@ -170,7 +170,7 @@ export default function LoginPage() {
             <p className="text-xs text-muted-foreground text-center">Acesso de teste com dados fictícios</p>
           </div>
 
-          <div className="mt-4 text-center text-sm space-y-2">
+          <div className="text-center text-sm space-y-2">
             <div>
               <span className="text-muted-foreground">Não tem conta? </span>
               <Link href="/register" className="text-primary hover:underline font-medium">

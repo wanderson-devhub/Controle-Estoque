@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Lock, ArrowLeft } from "lucide-react"
 
 export default function ResetPasswordPage() {
@@ -82,15 +83,14 @@ export default function ResetPasswordPage() {
           <CardTitle className="text-2xl">Nova Senha</CardTitle>
           <CardDescription>Digite sua nova senha</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="newPassword">Nova Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                <PasswordInput
                   id="newPassword"
-                  type="password"
                   placeholder="••••••••"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -103,10 +103,9 @@ export default function ResetPasswordPage() {
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirmar Nova Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                <PasswordInput
                   id="confirmPassword"
-                  type="password"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -133,7 +132,7 @@ export default function ResetPasswordPage() {
             </Button>
           </form>
 
-          <div className="mt-4 text-center text-sm">
+          <div className="text-center text-sm">
             <Link href="/login" className="text-primary hover:underline font-medium flex items-center justify-center gap-1">
               <ArrowLeft className="h-4 w-4" />
               Voltar ao Login

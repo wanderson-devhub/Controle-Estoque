@@ -87,7 +87,7 @@ export function ConsumptionList({ initialConsumptions, userId }: ConsumptionList
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="shadow-professional hover-lift animate-slide-up">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
@@ -99,7 +99,7 @@ export function ConsumptionList({ initialConsumptions, userId }: ConsumptionList
           <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-5 mb-6">
             {products.map((product) => (
               <div key={product.id} className="flex flex-col gap-2">
-                <div className="relative overflow-hidden rounded-lg bg-muted border border-border hover:border-primary transition-colors">
+                <div className="relative overflow-hidden rounded-lg bg-muted border border-border hover:border-primary transition-colors hover-lift">
                   <img
                     src={product.imageUrl || "/placeholder.svg"}
                     alt={product.name}
@@ -118,7 +118,7 @@ export function ConsumptionList({ initialConsumptions, userId }: ConsumptionList
                     min="0"
                     max="99"
                     value={cart[product.id] || 0}
-                    onChange={(e) => setCart({ ...cart, [product.id]: Number.parseInt(e.target.value) || 0 })}
+                    onChange={(e) => setCart({ ...cart, [productId]: Number.parseInt(e.target.value) || 0 })}
                     className="h-8 text-center text-xs p-1"
                   />
                 </div>
@@ -141,7 +141,7 @@ export function ConsumptionList({ initialConsumptions, userId }: ConsumptionList
                   })
                 }}
                 disabled={Object.values(cart).every((qty) => qty === 0) || loading}
-                className="gap-2"
+                className="gap-2 hover-lift"
               >
                 <Plus className="h-4 w-4" />
                 Confirmar Compra
@@ -155,14 +155,14 @@ export function ConsumptionList({ initialConsumptions, userId }: ConsumptionList
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">Histórico de Consumo</h3>
         {groupedConsumptions.length === 0 ? (
-          <Card>
+          <Card className="shadow-professional hover-lift">
             <CardContent className="pt-6 text-center text-muted-foreground">
               Nenhum consumo registrado ainda
             </CardContent>
           </Card>
         ) : (
           groupedConsumptions.map(({ product, totalQty, totalPrice }) => (
-            <Card key={product.id}>
+            <Card key={product.id} className="shadow-professional hover-lift">
               <CardContent className="pt-6">
                 <div className="flex gap-4">
                   <img

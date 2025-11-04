@@ -35,7 +35,7 @@ export default async function DashboardPage() {
       <Header userName={user.warName} pixKey={user.pixKey || undefined} />
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid gap-4 mb-8">
-          <div className="bg-card border border-border rounded-lg p-6">
+          <div className="bg-card border border-border rounded-lg p-6 shadow-professional hover-lift animate-slide-up">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-muted-foreground">Total a Pagar</p>

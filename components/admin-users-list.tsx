@@ -104,7 +104,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-card border border-border rounded-lg p-6 mb-6">
+      <div className="bg-card border border-border rounded-lg p-6 mb-6 shadow-professional hover-lift animate-slide-up">
         <div className="flex items-center gap-2 mb-2">
           <Users className="h-5 w-5 text-primary" />
           <h2 className="text-xl font-semibold">Total de Usuários</h2>
@@ -112,7 +112,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
         <p className="text-3xl font-bold text-primary">{filteredUsers.length}</p>
       </div>
 
-      <div className="bg-card border border-border rounded-lg p-4 mb-6">
+      <div className="bg-card border border-border rounded-lg p-4 mb-6 shadow-professional hover-lift">
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="text-sm font-medium text-muted-foreground mb-2 block">Pesquisar</label>
@@ -175,7 +175,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
 
       <div className="space-y-3">
         {filteredUsers.map((user) => (
-          <Card key={user.id}>
+          <Card key={user.id} className="hover-lift">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-4">
                 <div
@@ -211,11 +211,11 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                 )}
 
                 <div className="flex gap-2 flex-col sm:flex-row">
-                  <Button variant="outline" size="sm" onClick={() => handleWhatsAppCharge(user)} className="gap-2">
+                  <Button variant="outline" size="sm" onClick={() => handleWhatsAppCharge(user)} className="gap-2 hover-lift">
                     <MessageCircle className="h-4 w-4" />
                     WhatsApp
                   </Button>
-                  <Button variant="destructive" size="sm" onClick={() => handleClearDebt(user.id)} className="gap-2">
+                  <Button variant="destructive" size="sm" onClick={() => handleClearDebt(user.id)} className="gap-2 hover-lift">
                     <Trash2 className="h-4 w-4" />
                     Zerar
                   </Button>

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Mail, Lock, User, Briefcase, Phone } from "lucide-react"
 
@@ -80,7 +81,7 @@ export default function RegisterPage() {
           <CardTitle className="text-2xl">Cadastro</CardTitle>
           <CardDescription>Crie sua conta para usar o sistema</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="warName">Nome de Guerra</Label>
@@ -164,11 +165,10 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                <PasswordInput
                   id="password"
                   name="password"
-                  type="password"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
@@ -189,7 +189,7 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <div className="mt-4 text-center text-sm">
+          <div className="text-center text-sm">
             <span className="text-muted-foreground">Já tem conta? </span>
             <Link href="/login" className="text-primary hover:underline font-medium">
               Faça login

@@ -29,7 +29,7 @@ export default async function AdminPage() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Painel Administrativo</h1>
           <Link href="/admin/products">
-            <Button className="gap-2">
+            <Button className="gap-2 hover-lift">
               <Settings className="h-4 w-4" />
               Gerenciar Produtos
             </Button>

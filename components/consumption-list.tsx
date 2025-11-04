@@ -118,7 +118,7 @@ export function ConsumptionList({ initialConsumptions, userId }: ConsumptionList
                     min="0"
                     max="99"
                     value={cart[product.id] || 0}
-                    onChange={(e) => setCart({ ...cart, [productId]: Number.parseInt(e.target.value) || 0 })}
+                    onChange={(e) => setCart({ ...cart, [product.id]: Number.parseInt(e.target.value) || 0 })}
                     className="h-8 text-center text-xs p-1"
                   />
                 </div>

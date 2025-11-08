@@ -7,23 +7,34 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
 
-    if (!email || !password) {
+    // Validate input
+    if (!email || typeof email !== "string" || !password || typeof password !== "string") {
       return NextResponse.json({ error: "Email/Nome de Guerra e senha são obrigatórios" }, { status: 400 })
     }
 
-    // Try to find user by email first, then by warName
-    let user = await prisma.user.findUnique({
-      where: { email },
+    const trimmedEmail = email.trim().toLowerCase()
+    
+    if (!trimmedEmail || password.length < 1) {
+      return NextResponse.json({ error: "Email/Nome de Guerra e senha são obrigatórios" }, { status: 400 })
+    }
+
+    // Try to find user by email first (case-insensitive), then by warName
+    let user = await prisma.user.findFirst({
+      where: { 
+        OR: [
+          { email: { equals: trimmedEmail, mode: "insensitive" } },
+          { warName: { equals: trimmedEmail, mode: "insensitive" } }
+        ]
+      },
     })
 
     if (!user) {
-      user = await prisma.user.findFirst({
-        where: { warName: email },
-      })
+      return NextResponse.json({ error: "Usuário não encontrado" }, { status: 401 })
     }
 
-    if (!user) {
-      return NextResponse.json({ error: "Usuário não encontrado" }, { status: 401 })
+    // Validate that user has a password set
+    if (!user.password) {
+      return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 })
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password)

@@ -35,8 +35,15 @@ export async function getSession(): Promise<SessionUser | null> {
 
   try {
     const data = JSON.parse(Buffer.from(session.value, "base64").toString())
+    
+    // Validate required fields
+    if (!data.id || !data.email || !data.warName || typeof data.isAdmin !== "boolean") {
+      return null
+    }
+    
     return data as SessionUser
-  } catch {
+  } catch (error) {
+    console.error("Error decoding session:", error)
     return null
   }
 }

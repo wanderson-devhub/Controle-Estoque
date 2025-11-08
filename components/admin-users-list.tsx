@@ -61,15 +61,24 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+    // Reset pagination when component mounts
+    setCurrentPage(1);
+  }, [adminId]);
 
   async function fetchUsers() {
     try {
       const response = await fetch("/api/users");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid response: expected an array");
+      }
       setUsers(data);
     } catch (error) {
       console.error("Error fetching users:", error);
+      setUsers([]); // Set empty array on error to avoid UI breaking
     } finally {
       setLoading(false);
     }
@@ -81,8 +90,8 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
     if (searchTerm) {
       filtered = filtered.filter(
         (u) =>
-          u.warName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          u.email.toLowerCase().includes(searchTerm.toLowerCase())
+          (u.warName?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (u.email?.toLowerCase() || "").includes(searchTerm.toLowerCase())
       );
     }
 
@@ -95,15 +104,15 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
     }
 
     if (sortOrder === "asc") {
-      filtered.sort((a, b) => a.warName.localeCompare(b.warName));
+      filtered.sort((a, b) => (a.warName || "").localeCompare(b.warName || ""));
     } else if (sortOrder === "desc") {
-      filtered.sort((a, b) => b.warName.localeCompare(a.warName));
+      filtered.sort((a, b) => (b.warName || "").localeCompare(a.warName || ""));
     } else if (sortOrder === "random") {
       filtered.sort(() => Math.random() - 0.5);
     } else if (sortOrder === "highest") {
-      filtered.sort((a, b) => b.total - a.total);
+      filtered.sort((a, b) => (b.total || 0) - (a.total || 0));
     } else if (sortOrder === "lowest") {
-      filtered.sort((a, b) => a.total - b.total);
+      filtered.sort((a, b) => (a.total || 0) - (b.total || 0));
     }
 
     return filtered;
@@ -111,33 +120,56 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
 
   async function handleClearDebt(userId: string) {
     try {
-      await fetch("/api/admin/consumptions", {
+      const response = await fetch("/api/admin/consumptions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
       });
+      if (!response.ok) {
+        throw new Error(`Failed to clear debt: ${response.status}`);
+      }
       await fetchUsers();
     } catch (error) {
       console.error("Error clearing debt:", error);
+      // TODO: Show error toast to user
     }
   }
 
   function handleWhatsAppCharge(user: User) {
+    // Validate user data
+    if (!user.warName || !user.phone || typeof user.total !== "number") {
+      console.error("Invalid user data for WhatsApp charge");
+      return;
+    }
+
     const message = `Olá ${
       user.warName
     }, você está devendo R$${user.total.toFixed(
       2
     )}. Por favor, efetue o pagamento.`;
-    const whatsappUrl = `https://wa.me/55${user.phone.replace(
-      /\D/g,
-      ""
-    )}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    
+    const cleanPhone = user.phone.replace(/\D/g, "");
+    if (!cleanPhone) {
+      console.error("Invalid phone number");
+      return;
+    }
+
+    const whatsappUrl = `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(message)}`;
+    
+    // Check if window is available (not in SSR)
+    if (typeof window !== "undefined") {
+      window.open(whatsappUrl, "_blank");
+    }
   }
 
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterCompany, filterRank, sortOrder]);
+
   const filteredUsers = getFilteredAndSortedUsers();
-  const companies = [...new Set(users.map((u) => u.company))].sort();
-  const ranks = [...new Set(users.map((u) => u.rank))].sort();
+  const companies = [...new Set(users.map((u) => u.company).filter(Boolean))].sort();
+  const ranks = [...new Set(users.map((u) => u.rank).filter(Boolean))].sort();
 
   if (loading) {
     return <div>Carregando...</div>;

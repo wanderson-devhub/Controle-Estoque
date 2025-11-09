@@ -18,12 +18,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email/Nome de Guerra e senha são obrigatórios" }, { status: 400 })
     }
 
-    // Try to find user by email first (case-insensitive), then by warName
+    // Try to find user by email first (case-sensitive), then by warName
     let user = await prisma.user.findFirst({
-      where: { 
+      where: {
         OR: [
-          { email: { equals: trimmedEmail, mode: "insensitive" } },
-          { warName: { equals: trimmedEmail, mode: "insensitive" } }
+          { email: { equals: trimmedEmail } },
+          { warName: { equals: trimmedEmail } }
         ]
       },
     })

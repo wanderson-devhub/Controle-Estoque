@@ -21,6 +21,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email já cadastrado" }, { status: 409 })
     }
 
+    // Check if phone number is already in use
+    const existingPhone = await prisma.user.findUnique({
+      where: { phone },
+    })
+
+    if (existingPhone) {
+      return NextResponse.json({ error: "Este número já está sendo usado" }, { status: 409 })
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 

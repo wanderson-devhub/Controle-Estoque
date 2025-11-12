@@ -55,8 +55,8 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
   const [filterRank, setFilterRank] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [expandedUser, setExpandedUser] = useState<string | null>(null);
-  const [userDetails, setUserDetails] = useState<any>(null);
-  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [userDetails, setUserDetails] = useState<Record<string, any>>({});
+  const [loadingDetails, setLoadingDetails] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("pending");
   const itemsPerPage = 20;
@@ -294,18 +294,18 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                           onClick={async () => {
                             const newExpanded = expandedUser === user.id ? null : user.id;
                             setExpandedUser(newExpanded);
-                            if (newExpanded && !userDetails) {
-                              setLoadingDetails(true);
+                            if (newExpanded && !userDetails[user.id]) {
+                              setLoadingDetails((prev) => ({ ...prev, [user.id]: true }));
                               try {
                                 const response = await fetch(`/api/users/${user.id}`);
                                 if (response.ok) {
                                   const data = await response.json();
-                                  setUserDetails(data);
+                                  setUserDetails((prev) => ({ ...prev, [user.id]: data }));
                                 }
                               } catch (error) {
                                 console.error("Error fetching user details:", error);
                               } finally {
-                                setLoadingDetails(false);
+                                setLoadingDetails((prev) => ({ ...prev, [user.id]: false }));
                               }
                             }
                           }}
@@ -347,27 +347,42 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                               </span>
                               <span className="font-medium">{user.phone}</span>
                             </div>
-                            {loadingDetails ? (
+                            {loadingDetails[user.id] ? (
                               <div className="text-center py-4">
                                 <p className="text-muted-foreground">Carregando produtos...</p>
                               </div>
-                            ) : userDetails?.consumptions && userDetails.consumptions.length > 0 ? (
+                            ) : userDetails[user.id]?.consumptions && userDetails[user.id].consumptions.length > 0 ? (
                               <div className="mt-4">
                                 <h4 className="font-semibold text-primary mb-2">Produtos Comprados</h4>
                                 <div className="space-y-2">
-                                  {userDetails.consumptions.map((consumption: any) => (
-                                    <div key={consumption.id} className="flex justify-between items-center bg-muted/50 p-2 rounded">
-                                      <div>
-                                        <p className="font-medium">{consumption.product.name}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                          {consumption.quantity} un. × R$ {consumption.product.price.toFixed(2)}
+                                  {(() => {
+                                    const groupedConsumptions = userDetails[user.id].consumptions.reduce((acc: Record<string, any>, consumption: any) => {
+                                      const key = consumption.product.name;
+                                      if (!acc[key]) {
+                                        acc[key] = {
+                                          product: consumption.product,
+                                          quantity: 0,
+                                          total: 0
+                                        };
+                                      }
+                                      acc[key].quantity += consumption.quantity;
+                                      acc[key].total += consumption.quantity * consumption.product.price;
+                                      return acc;
+                                    }, {});
+                                    return Object.values(groupedConsumptions).sort((a: any, b: any) => b.total - a.total).map((grouped: any) => (
+                                      <div key={grouped.product.name} className="flex justify-between items-center bg-muted/50 p-2 rounded">
+                                        <div>
+                                          <p className="font-medium">{grouped.product.name}</p>
+                                          <p className="text-xs text-muted-foreground">
+                                            {grouped.quantity} un. × R$ {grouped.product.price.toFixed(2)}
+                                          </p>
+                                        </div>
+                                        <p className="font-bold text-primary">
+                                          R$ {grouped.total.toFixed(2)}
                                         </p>
                                       </div>
-                                      <p className="font-bold text-primary">
-                                        R$ {(consumption.quantity * consumption.product.price).toFixed(2)}
-                                      </p>
-                                    </div>
-                                  ))}
+                                    ));
+                                  })()}
                                 </div>
                               </div>
                             ) : (

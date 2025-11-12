@@ -42,7 +42,11 @@ export async function GET(
     const consumptions = await prisma.consumption.findMany({
       where: {
         userId: userId,
-        ...(session.isAdmin && !session.isAdmin ? {} : {}), // For users, get all; for admins viewing others, get all (but totals are filtered in /api/users)
+        ...(session.isAdmin ? {
+          product: {
+            adminId: session.id,
+          },
+        } : {}), // For users, get all; for admins viewing others, get only from their products
       },
       include: {
         product: {

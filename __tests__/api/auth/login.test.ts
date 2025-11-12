@@ -11,10 +11,7 @@ import * as authModule from '@/lib/auth'
 jest.mock('@/lib/db', () => ({
   __esModule: true,
   default: {
-    user: {
-      findFirst: jest.fn(),
-      findUnique: jest.fn(),
-    },
+    $queryRaw: jest.fn(),
   },
 }))
 
@@ -138,7 +135,7 @@ describe('Login API Route', () => {
     })
 
     it('should trim and lowercase email', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -151,23 +148,17 @@ describe('Login API Route', () => {
 
       await POST(request)
 
-      expect(prisma.user.findFirst).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            OR: expect.arrayContaining([
-              expect.objectContaining({
-                email: { equals: 'test@example.com', mode: 'insensitive' },
-              }),
-            ]),
-          }),
-        })
+      expect(prisma.$queryRaw).toHaveBeenCalledWith(
+        expect.any(Array),
+        'test@example.com',
+        'test@example.com'
       )
     })
   })
 
   describe('User Lookup', () => {
-    it('should find user by email (case-insensitive)', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+    it('should find user by email or warName', async () => {
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -180,18 +171,15 @@ describe('Login API Route', () => {
 
       await POST(request)
 
-      expect(prisma.user.findFirst).toHaveBeenCalledWith({
-        where: {
-          OR: [
-            { email: { equals: 'test@example.com', mode: 'insensitive' } },
-            { warName: { equals: 'test@example.com', mode: 'insensitive' } },
-          ],
-        },
-      })
+      expect(prisma.$queryRaw).toHaveBeenCalledWith(
+        expect.any(Array),
+        'test@example.com',
+        'test@example.com'
+      )
     })
 
     it('should find user by warName if email not found', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -204,18 +192,15 @@ describe('Login API Route', () => {
 
       await POST(request)
 
-      expect(prisma.user.findFirst).toHaveBeenCalledWith({
-        where: {
-          OR: [
-            { email: { equals: 'testuser', mode: 'insensitive' } },
-            { warName: { equals: 'testuser', mode: 'insensitive' } },
-          ],
-        },
-      })
+      expect(prisma.$queryRaw).toHaveBeenCalledWith(
+        expect.any(Array),
+        'testuser',
+        'testuser'
+      )
     })
 
     it('should return 401 if user not found', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(null)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([])
 
       const request = {
         json: async () => ({
@@ -234,7 +219,7 @@ describe('Login API Route', () => {
 
   describe('Password Validation', () => {
     it('should return 401 if password is incorrect', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(false)
 
       const request = {
@@ -253,9 +238,9 @@ describe('Login API Route', () => {
 
     it('should return 401 if user has no password set', async () => {
       const userWithoutPassword = { ...mockUser, password: null }
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([
         userWithoutPassword
-      )
+      ])
 
       const request = {
         json: async () => ({
@@ -272,7 +257,7 @@ describe('Login API Route', () => {
     })
 
     it('should call bcrypt.compare with correct arguments', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -294,7 +279,7 @@ describe('Login API Route', () => {
 
   describe('Session Creation', () => {
     it('should create session on successful login', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -313,7 +298,7 @@ describe('Login API Route', () => {
 
   describe('Success Response', () => {
     it('should return 200 with user data on successful login', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -338,7 +323,7 @@ describe('Login API Route', () => {
     })
 
     it('should not return password in response', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -358,7 +343,7 @@ describe('Login API Route', () => {
 
   describe('Error Handling', () => {
     it('should return 500 on internal server error', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockRejectedValue(
+      ;(prisma.$queryRaw as jest.Mock).mockRejectedValue(
         new Error('Database error')
       )
 
@@ -378,7 +363,7 @@ describe('Login API Route', () => {
 
     it('should log error on internal server error', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation()
-      ;(prisma.user.findFirst as jest.Mock).mockRejectedValue(
+      ;(prisma.$queryRaw as jest.Mock).mockRejectedValue(
         new Error('Database error')
       )
 
@@ -403,7 +388,7 @@ describe('Login API Route', () => {
   describe('Admin Users', () => {
     it('should return isAdmin=true for admin users', async () => {
       const adminUser = { ...mockUser, isAdmin: true }
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(adminUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([adminUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 
@@ -421,7 +406,7 @@ describe('Login API Route', () => {
     })
 
     it('should return isAdmin=false for regular users', async () => {
-      ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(mockUser)
+      ;(prisma.$queryRaw as jest.Mock).mockResolvedValue([mockUser])
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
       ;(authModule.createSession as jest.Mock).mockResolvedValue(undefined)
 

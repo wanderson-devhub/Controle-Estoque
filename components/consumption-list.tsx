@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Plus, ShoppingCart, Minus, ChevronDown, Copy } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { useToast } from "@/hooks/use-toast"
 
 interface Product {
   id: string
@@ -52,6 +53,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
   const [groupedProducts, setGroupedProducts] = useState<GroupedProducts>({})
   const [cart, setCart] = useState<{ [productId: string]: number }>({})
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
 
       if (response.ok) {
         const newConsumption = await response.json()
-        const updatedConsumptions = [...consumptions, newConsumption]
+        const updatedConsumptions = [...(consumptions || []), newConsumption]
         setConsumptions(updatedConsumptions)
         onConsumptionsChange?.(updatedConsumptions)
         setCart({ ...cart, [productId]: 0 })
@@ -132,7 +134,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
       }
 
       if (newConsumptions.length > 0) {
-        const updatedConsumptions = [...consumptions, ...newConsumptions]
+        const updatedConsumptions = [...(consumptions || []), ...newConsumptions]
         setConsumptions(updatedConsumptions)
         onConsumptionsChange?.(updatedConsumptions)
         setCart({})
@@ -153,14 +155,22 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
   async function copyToClipboard(text: string) {
     try {
       await navigator.clipboard.writeText(text)
-      // You could add a toast notification here if desired
+      toast({
+        title: "Copiado!",
+        description: "Chave Pix copiada para a área de transferência.",
+      })
     } catch (error) {
       console.error("Failed to copy to clipboard:", error)
+      toast({
+        title: "Erro",
+        description: "Não foi possível copiar a chave Pix.",
+        variant: "destructive",
+      })
     }
   }
 
   // Group consumptions by date
-  const groupedByDate = consumptions.reduce((acc, consumption) => {
+  const groupedByDate = (consumptions || []).reduce((acc, consumption) => {
     const date = new Date(consumption.createdAt).toLocaleDateString('pt-BR')
     if (!acc[date]) {
       acc[date] = []
@@ -256,12 +266,10 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                               alt={product.name}
                               className="w-full h-24 object-cover"
                             />
-                            <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="text-white text-xs font-semibold text-center px-1">
-                                R$ {product.price.toFixed(2)}
-                              </span>
-                            </div>
                           </div>
+                          <p className="text-sm font-bold text-primary text-center">
+                            R$ {product.price.toFixed(2)}
+                          </p>
                           <h4 className="text-sm font-semibold line-clamp-2">{product.name}</h4>
                           <div className="flex items-center gap-1">
                             <Button
@@ -306,12 +314,10 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                       alt={product.name}
                       className="w-full h-24 object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-white text-xs font-semibold text-center px-1">
-                        R$ {product.price.toFixed(2)}
-                      </span>
-                    </div>
                   </div>
+                  <p className="text-sm font-bold text-primary text-center">
+                    R$ {product.price.toFixed(2)}
+                  </p>
                   <h4 className="text-sm font-semibold line-clamp-2">{product.name}</h4>
                   <div className="flex items-center gap-1">
                     <Button

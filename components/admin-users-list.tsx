@@ -55,6 +55,8 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
   const [filterRank, setFilterRank] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [expandedUser, setExpandedUser] = useState<string | null>(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("pending");
   const itemsPerPage = 20;
@@ -289,11 +291,24 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                       <div className="flex flex-col gap-4">
                         <div
                           className="flex items-center justify-between cursor-pointer"
-                          onClick={() =>
-                            setExpandedUser(
-                              expandedUser === user.id ? null : user.id
-                            )
-                          }
+                          onClick={async () => {
+                            const newExpanded = expandedUser === user.id ? null : user.id;
+                            setExpandedUser(newExpanded);
+                            if (newExpanded && !userDetails) {
+                              setLoadingDetails(true);
+                              try {
+                                const response = await fetch(`/api/users/${user.id}`);
+                                if (response.ok) {
+                                  const data = await response.json();
+                                  setUserDetails(data);
+                                }
+                              } catch (error) {
+                                console.error("Error fetching user details:", error);
+                              } finally {
+                                setLoadingDetails(false);
+                              }
+                            }
+                          }}
                         >
                           <div className="flex-1">
                             <h3 className="font-semibold text-lg">
@@ -332,6 +347,34 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                               </span>
                               <span className="font-medium">{user.phone}</span>
                             </div>
+                            {loadingDetails ? (
+                              <div className="text-center py-4">
+                                <p className="text-muted-foreground">Carregando produtos...</p>
+                              </div>
+                            ) : userDetails?.consumptions && userDetails.consumptions.length > 0 ? (
+                              <div className="mt-4">
+                                <h4 className="font-semibold text-primary mb-2">Produtos Comprados</h4>
+                                <div className="space-y-2">
+                                  {userDetails.consumptions.map((consumption: any) => (
+                                    <div key={consumption.id} className="flex justify-between items-center bg-muted/50 p-2 rounded">
+                                      <div>
+                                        <p className="font-medium">{consumption.product.name}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                          {consumption.quantity} un. × R$ {consumption.product.price.toFixed(2)}
+                                        </p>
+                                      </div>
+                                      <p className="font-bold text-primary">
+                                        R$ {(consumption.quantity * consumption.product.price).toFixed(2)}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="text-center py-4">
+                                <p className="text-muted-foreground">Nenhum produto comprado</p>
+                              </div>
+                            )}
                           </div>
                         )}
 

@@ -30,9 +30,14 @@ export async function POST(request: NextRequest) {
 
     const { userId } = await request.json()
 
-    // Delete all consumptions for user
+    // Delete only consumptions for products owned by this admin
     await prisma.consumption.deleteMany({
-      where: { userId },
+      where: {
+        userId,
+        product: {
+          adminId: session.id,
+        },
+      },
     })
 
     return NextResponse.json({ success: true })

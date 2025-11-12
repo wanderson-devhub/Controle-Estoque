@@ -136,7 +136,7 @@ export default function DashboardPage() {
               </div>
               <div className="text-right">
                 <p className="text-muted-foreground">Itens Consumidos</p>
-                <p className="text-3xl font-bold">{user.consumptions.length}</p>
+                <p className="text-3xl font-bold">{user.consumptions?.length || 0}</p>
               </div>
             </div>
           </div>

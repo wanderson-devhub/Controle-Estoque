@@ -78,13 +78,18 @@ export function ProfileForm({ user }: ProfileFormProps) {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
+        const data = await response.json();
         setMessage("Perfil atualizado com sucesso!");
       } else {
-        setMessage(data.error || "Erro ao atualizar perfil");
-        console.error("Update error:", data);
+        try {
+          const data = await response.json();
+          setMessage(data.error || "Erro ao atualizar perfil");
+          console.error("Update error:", data);
+        } catch (parseError) {
+          setMessage("Erro ao atualizar perfil");
+          console.error("Parse error:", parseError);
+        }
       }
     } catch (error) {
       setMessage("Erro ao conectar ao servidor");

@@ -79,3 +79,57 @@ export async function GET(
     return NextResponse.json({ error: "Failed to fetch user details" }, { status: 500 })
   }
 }
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getSession()
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const { id: userId } = await params
+
+    // Only allow users to update their own data or admins
+    if (session.id !== userId && !session.isAdmin) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const body = await request.json()
+    const { warName, rank, company, phone, pixKey, pixQrCode } = body
+
+    // Validate required fields
+    if (!warName || !phone) {
+      return NextResponse.json({ error: "Nome de guerra e telefone são obrigatórios" }, { status: 400 })
+    }
+
+    // Update user
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        warName,
+        rank,
+        company,
+        phone,
+        ...(session.isAdmin && { pixKey, pixQrCode }), // Only admins can update pix info
+      },
+      select: {
+        id: true,
+        email: true,
+        warName: true,
+        rank: true,
+        company: true,
+        phone: true,
+        pixKey: true,
+        pixQrCode: true,
+      },
+    })
+
+    return NextResponse.json(updatedUser)
+  } catch (error) {
+    console.error("Update user error:", error)
+    return NextResponse.json({ error: "Failed to update user" }, { status: 500 })
+  }
+}

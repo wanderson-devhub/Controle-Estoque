@@ -10,6 +10,8 @@ CREATE TABLE "users" (
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "pixKey" TEXT,
     "pixQrCode" TEXT,
+    "resetToken" TEXT,
+    "resetTokenExpiry" DATETIME,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -46,6 +48,9 @@ CREATE TABLE "charges" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "products_name_key" ON "products"("name");

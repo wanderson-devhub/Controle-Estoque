@@ -18,15 +18,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email/Nome de Guerra e senha são obrigatórios" }, { status: 400 })
     }
 
-    // Try to find user by email first (case-sensitive), then by warName
-    let user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { email: { equals: trimmedEmail } },
-          { warName: { equals: trimmedEmail } }
-        ]
-      },
-    })
+    // Try to find user by email or warName (case-insensitive for warName)
+    const users = await prisma.$queryRaw<
+      Array<{
+        id: string
+        email: string
+        password: string
+        warName: string
+        rank: string
+        company: string
+        phone: string
+        isAdmin: boolean
+        pixKey: string | null
+        pixQrCode: string | null
+        resetToken: string | null
+        resetTokenExpiry: Date | null
+        createdAt: Date
+        updatedAt: Date
+      }>
+    >`
+      SELECT * FROM users
+      WHERE email = ${trimmedEmail} OR LOWER(warName) = LOWER(${trimmedEmail})
+      LIMIT 1
+    `
+
+    const user = users[0] || null
 
     if (!user) {
       return NextResponse.json({ error: "Usuário não encontrado" }, { status: 401 })

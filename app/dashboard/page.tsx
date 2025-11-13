@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { ConsumptionList } from "@/components/consumption-list"
-import { formatPrice } from "@/lib/utils"
+import { formatNumber, formatPrice } from "@/lib/utils"
 
 
 interface Consumption {
@@ -139,7 +139,7 @@ export default function DashboardPage() {
               </div>
               <div className="text-left sm:text-right">
                 <p className="text-sm md:text-base text-muted-foreground">Itens Consumidos</p>
-                <p className="text-2xl md:text-3xl font-bold">{user.consumptions?.length || 0}</p>
+                <p className="text-2xl md:text-3xl font-bold">{formatNumber(user.consumptions?.length) || 0}</p>
               </div>
             </div>
           </div>

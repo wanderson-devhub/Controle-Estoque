@@ -6,5 +6,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(value: number): string {
-  return value.toFixed(2).replace('.', ',')
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
+}
+
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value)
 }

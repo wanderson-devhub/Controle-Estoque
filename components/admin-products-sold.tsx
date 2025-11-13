@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp, Package } from "lucide-react"
-import { formatPrice } from "@/lib/utils"
+import { formatNumber, formatPrice } from "@/lib/utils"
 
 interface Product {
   id: string
@@ -133,7 +133,7 @@ export function AdminProductsSold({ adminId }: AdminProductsSoldProps) {
               <div className="flex-1">
                 <h3 className="font-semibold">{sale.product.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {sale.totalQuantity} unidades × R$ {formatPrice(sale.product.price)}
+                  {formatNumber(sale.totalQuantity)} unidades × R$ {formatPrice(sale.product.price)}
                 </p>
               </div>
               <div className="text-right">

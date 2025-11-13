@@ -30,7 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatPrice } from "@/lib/utils";
+import { formatNumber, formatPrice } from "@/lib/utils";
 
 interface User {
   id: string;
@@ -202,7 +202,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
           <h2 className="text-xl font-semibold">Total de Usuários</h2>
         </div>
         <p className="text-3xl font-bold text-primary">
-          {filteredUsers.length}
+          {formatNumber(filteredUsers.length)}
         </p>
       </div>
 

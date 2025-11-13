@@ -7,7 +7,7 @@ import { Plus, ShoppingCart, Minus, ChevronDown, Copy } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
-import { formatPrice } from "@/lib/utils"
+import { formatNumber, formatPrice } from "@/lib/utils"
 
 interface Product {
   id: string
@@ -442,7 +442,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                             <div className="flex-1">
                               <h3 className="font-semibold">{product.name}</h3>
                               <p className="text-sm text-muted-foreground">
-                                {totalQty} unidades × R$ {formatPrice(product.price)}
+                                {formatNumber(totalQty)} unidades × R$ {formatPrice(product.price)}
                               </p>
                               {items.length > 0 && (
                                 <div className="mt-2 space-y-1">

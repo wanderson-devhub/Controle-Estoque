@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign } from "lucide-react"
-import { formatPrice } from "@/lib/utils"
+import { formatNumber, formatPrice } from "@/lib/utils"
 
 interface ProfitData {
   totalProfit: number
@@ -69,7 +69,7 @@ export function AdminProfitSummary({ initialProfit, initialQuantity }: AdminProf
           R$ {formatPrice(profitData.totalProfit)}
         </div>
         <p className="text-sm text-green-700 dark:text-green-900">
-          Total de {profitData.totalQuantitySold} produtos vendidos
+          Total de {formatNumber(profitData.totalQuantitySold)} produtos vendidos
         </p>
       </CardContent>
     </Card>

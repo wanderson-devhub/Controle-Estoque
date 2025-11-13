@@ -146,17 +146,17 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
       return;
     }
 
-    const message = `Olá ${user.rank} ${
-      user.warName
-    }, Fechamento referente ao *MÊS PASSADO* 📆
-
-💰VALOR: R$: ${user.total.toFixed(2)}
-
-Chave PIX: 87 999717278
-Cloudwalk infinite pay 
-Vinicius Araújo Leite
-
-*POR FAVOR MANDAR COMPROVANTE*`;
+     const message = [
+    `Olá *${user.warName}*, Fechamento referente ao *MÊS PASSADO* ☶`,
+    ``,
+    `⪩ VALOR: *R$ ${user.total.toFixed(2)}*`,
+    ``,
+    `Chave PIX: 87 999717278`,
+    `Cloudwalk Infinite Pay`,
+    `Vinicius Araújo Leite`,
+    ``,
+    `*POR FAVOR MANDAR COMPROVANTE*`
+  ].join("\n");
 
     const cleanPhone = user.phone.replace(/\D/g, "");
     if (!cleanPhone) {

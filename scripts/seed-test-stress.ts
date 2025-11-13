@@ -1,3 +1,7 @@
+// Seed de stress para testar o desempenho do sistema
+// Este script cria um grande número de registros para simular uma carga pesada no banco de dados.
+// Para inicializar basta inserir -> npx tsx scripts/seed-test-stress.ts
+
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
 

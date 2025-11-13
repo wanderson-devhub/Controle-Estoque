@@ -236,7 +236,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
               {Object.entries(groupedProducts).map(([adminId, { admin, products: adminProducts }]) => (
                 <div key={adminId} className="space-y-4">
                   <div className="border-t border-border pt-6 first:border-t-0 first:pt-0">
-                    <Card className="mb-4 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+                    <Card className="mb-4 bg-linear-to-r from-primary/5 to-primary/10 border-primary/20">
                       <CardContent>
                         <div className="flex flex-col w-full justify-between gap-4 items-center">
                           <div className="flex items-start gap-3 w-full">

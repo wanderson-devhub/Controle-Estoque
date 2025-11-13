@@ -50,7 +50,7 @@ export default function LoginPage() {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background to-muted p-4">
       <Card className="w-full max-w-md shadow-professional-lg animate-fade-in">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl text-center">Login</CardTitle>

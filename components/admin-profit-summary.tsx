@@ -57,7 +57,7 @@ export function AdminProfitSummary({ initialProfit, initialQuantity }: AdminProf
   }, [fetchProfitData])
 
   return (
-    <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-300 dark:to-emerald-200 dark:border-green-400">
+    <Card className="bg-linear-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-300 dark:to-emerald-200 dark:border-green-400">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg flex items-center gap-2 text-green-800">
           <DollarSign className="h-5 w-5" />

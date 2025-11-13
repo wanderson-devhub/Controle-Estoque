@@ -1323,7 +1323,7 @@
   .bg-white {
     background-color: var(--color-white);
   }
-  .bg-gradient-to-br {
+  .bg-linear-to-br {
     --tw-gradient-position: to bottom right in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
   }

@@ -64,7 +64,7 @@ export function Header({ userName, pixKey }: HeaderProps) {
   }
 
   return (
-    <header className="bg-card/95 backdrop-blur-sm border-b border-border sticky top-0 z-50 shadow-professional">
+    <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-50 shadow-professional">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => router.push("/dashboard")}>

@@ -8,7 +8,6 @@ import { Toaster } from "@/components/ui/toaster"
 export const metadata: Metadata = {
   title: "Controle de Estoque",
   description: "Sistema de controle de estoque e cobranças",
-  generator: "v0.app",
 }
 
 export default function RootLayout({

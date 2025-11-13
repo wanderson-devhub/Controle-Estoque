@@ -68,7 +68,7 @@ export default async function AdminPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-900 mb-2">
-                R$ {totalProfit.toFixed(2)}
+                R$ {formatPrice(totalProfit)}
               </div>
               <p className="text-sm text-green-700 dark:text-green-900">
                 Total de {totalQuantitySold} produtos vendidos

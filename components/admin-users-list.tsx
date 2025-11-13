@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatPrice } from "@/lib/utils";
 
 interface User {
   id: string;
@@ -149,7 +150,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
      const message = [
     `Olá *${user.warName}*, Fechamento referente ao *MÊS PASSADO* ☶`,
     ``,
-    `⪩ VALOR: *R$ ${user.total.toFixed(2)}*`,
+    `⪩ VALOR: *R$ ${formatPrice(user.total)}*`,
     ``,
     `Chave PIX: 87 999717278`,
     `Cloudwalk Infinite Pay`,
@@ -350,7 +351,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                               Total a Pagar
                             </p>
                             <p className="text-2xl font-bold text-primary">
-                              R$ {user.total.toFixed(2)}
+                              R$ {formatPrice(user.total)}
                             </p>
                           </div>
                           <ChevronDown
@@ -427,11 +428,11 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                                             </p>
                                             <p className="text-xs text-muted-foreground">
                                               {grouped.quantity} un. × R${" "}
-                                              {grouped.product.price.toFixed(2)}
+                                              {formatPrice(grouped.product.price)}
                                             </p>
                                           </div>
                                           <p className="font-bold text-primary">
-                                            R$ {grouped.total.toFixed(2)}
+                                            R$ {formatPrice(grouped.total)}
                                           </p>
                                         </div>
                                       ));
@@ -478,7 +479,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                                   <AlertDialogDescription>
                                     Você está prestes a zerar a dívida de{" "}
                                     {user.warName} no valor de R${" "}
-                                    {user.total.toFixed(2)}. Esta ação não pode
+                                    {formatPrice(user.total)}. Esta ação não pode
                                     ser desfeita.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
@@ -576,7 +577,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                               Total a Pagar
                             </p>
                             <p className="text-2xl font-bold text-primary">
-                              R$ {user.total.toFixed(2)}
+                              R$ {formatPrice(user.total)}
                             </p>
                           </div>
                           <ChevronDown

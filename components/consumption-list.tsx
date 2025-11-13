@@ -7,6 +7,7 @@ import { Plus, ShoppingCart, Minus, ChevronDown, Copy } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
+import { formatPrice } from "@/lib/utils"
 
 interface Product {
   id: string
@@ -278,7 +279,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                             />
                           </div>
                           <p className="text-sm font-bold text-primary text-center">
-                            R$ {product.price.toFixed(2)}
+                            R$ {formatPrice(product.price)}
                           </p>
                           <h4 className="text-sm font-semibold line-clamp-2">{product.name}</h4>
                           <div className="flex items-center gap-1">
@@ -326,7 +327,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                     />
                   </div>
                   <p className="text-sm font-bold text-primary text-center">
-                    R$ {product.price.toFixed(2)}
+                    R$ {formatPrice(product.price)}
                   </p>
                   <h4 className="text-sm font-semibold line-clamp-2">{product.name}</h4>
                   <div className="flex items-center gap-1">
@@ -364,7 +365,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
             <div className="flex justify-between items-center mb-4">
               <div>
                 <p className="text-sm text-muted-foreground">Total da Compra</p>
-                <p className="text-2xl font-bold text-primary">R$ {cartTotal.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-primary">R$ {formatPrice(cartTotal)}</p>
               </div>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -380,7 +381,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                   <AlertDialogHeader>
                     <AlertDialogTitle>Confirmar Compra</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Você está prestes a adicionar {Object.values(cart).reduce((sum, qty) => sum + qty, 0)} itens ao seu consumo totalizando R$ {cartTotal.toFixed(2)}.
+                      Você está prestes a adicionar {Object.values(cart).reduce((sum, qty) => sum + qty, 0)} itens ao seu consumo totalizando R$ {formatPrice(cartTotal)}.
                       Esta ação não pode ser desfeita.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -435,7 +436,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                             <div className="flex-1">
                               <h3 className="font-semibold">{product.name}</h3>
                               <p className="text-sm text-muted-foreground">
-                                {totalQty} unidades × R$ {product.price.toFixed(2)}
+                                {totalQty} unidades × R$ {formatPrice(product.price)}
                               </p>
                               {items.length > 0 && (
                                 <div className="mt-2 space-y-1">
@@ -453,7 +454,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                               )}
                             </div>
                             <div className="text-right">
-                              <p className="text-xl font-bold text-primary">R$ {totalPrice.toFixed(2)}</p>
+                              <p className="text-xl font-bold text-primary">R$ {formatPrice(totalPrice)}</p>
                             </div>
                           </div>
                         </CardContent>

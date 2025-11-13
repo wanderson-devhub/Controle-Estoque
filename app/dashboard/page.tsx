@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { ConsumptionList } from "@/components/consumption-list"
+import { formatPrice } from "@/lib/utils"
 
 
 interface Consumption {
@@ -125,10 +126,10 @@ export default function DashboardPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
                 <p className="text-sm md:text-base text-muted-foreground">Total a Pagar</p>
-                <p className="text-2xl md:text-3xl font-bold text-primary">R$ {total.toFixed(2)}</p>
+                <p className="text-2xl md:text-3xl font-bold text-primary">R$ {formatPrice(total)}</p>
                 {Object.values(totalsByAdmin).map(({ name, total: adminTotal }) => (
                   <p key={name} className="text-xs md:text-sm text-muted-foreground mt-1">
-                    A pagar para {name}: R$ {adminTotal.toFixed(2)}
+                    A pagar para {name}: R$ {formatPrice(adminTotal)}
                   </p>
                 ))}
               </div>

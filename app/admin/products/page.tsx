@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
+import { formatPrice } from "@/lib/utils"
 
 interface Product {
   id: string
@@ -237,7 +238,7 @@ export default function ProductsPage() {
                 className="w-full h-24 sm:h-32 object-cover rounded-lg mb-4"
               />
               <h3 className="font-semibold text-lg mb-1">{product.name}</h3>
-              <p className="text-primary font-bold mb-4">R$ {product.price.toFixed(2)}</p>
+              <p className="text-primary font-bold mb-4">R$ {formatPrice(product.price)}</p>
 
               <div className="flex items-center justify-between mb-4">
                 <span className="text-sm text-muted-foreground">

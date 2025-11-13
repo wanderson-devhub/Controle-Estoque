@@ -306,12 +306,9 @@ Para suporte técnico ou dúvidas:
 ## 🔄 Roadmap
 
 ### Próximas Features
-- [ ] Notificações push para novos consumos
 - [ ] Relatórios avançados em PDF
 - [ ] Integração com sistemas de pagamento
 - [ ] API REST pública para integrações
-- [ ] Aplicativo mobile companion
-- [ ] Modo offline para áreas remotas
 
 ### Melhorias Técnicas
 - [ ] Testes E2E com Playwright

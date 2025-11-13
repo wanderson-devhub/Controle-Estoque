@@ -284,10 +284,9 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                           <h4 className="text-sm font-semibold line-clamp-2">{product.name}</h4>
                           <div className="flex items-center gap-1">
                             <Button
-                              variant="outline"
                               size="sm"
                               onClick={() => adjustQuantity(product.id, -1)}
-                              className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                              className="bg-red-500 dark:bg-red-700 h-7 w-7 sm:h-8 sm:w-8 p-0"
                             >
                               <Minus className="h-3 w-3" />
                             </Button>
@@ -297,13 +296,12 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                               max="99"
                               value={cart[product.id] || 0}
                               onChange={(e) => setCart({ ...cart, [product.id]: Number.parseInt(e.target.value) || 0 })}
-                              className="h-7 sm:h-8 text-center text-xs w-10 sm:w-12 p-1"
+                              className="h-7 sm:h-8 text-center text-xs w-full p-1"
                             />
                             <Button
-                              variant="outline"
                               size="sm"
                               onClick={() => adjustQuantity(product.id, 1)}
-                              className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                              className="bg-green-500 dark:bg-green-700 h-7 w-7 sm:h-8 sm:w-8 p-0"
                             >
                               <Plus className="h-3 w-3" />
                             </Button>
@@ -364,7 +362,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
           <div className="border-t border-border pt-4">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <p className="text-sm text-muted-foreground">Total da Compra</p>
+                <p className="text-sm text-muted-foreground">Total do Pedido</p>
                 <p className="text-2xl font-bold text-primary">R$ {formatPrice(cartTotal)}</p>
               </div>
               <AlertDialog>
@@ -374,12 +372,12 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                     className="gap-2 hover-lift"
                   >
                     <Plus className="h-4 w-4" />
-                    Confirmar Compra
+                    Confirmar Pedido
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Confirmar Compra</AlertDialogTitle>
+                    <AlertDialogTitle>Confirmar Pedido</AlertDialogTitle>
                     <AlertDialogDescription>
                       Você está prestes a adicionar {Object.values(cart).reduce((sum, qty) => sum + qty, 0)} itens ao seu consumo totalizando R$ {formatPrice(cartTotal)}.
                       Esta ação não pode ser desfeita.
@@ -447,7 +445,7 @@ export function ConsumptionList({ initialConsumptions, userId, onConsumptionsCha
                                   ))}
                                   {items.length > 3 && (
                                     <p className="text-xs text-muted-foreground">
-                                      +{items.length - 3} compras anteriores
+                                      +{items.length - 3} pedidos anteriores
                                     </p>
                                   )}
                                 </div>

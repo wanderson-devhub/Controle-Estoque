@@ -117,7 +117,7 @@ export default function DashboardPage() {
             Bem-vindo, {user.warName}!
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground">
-            Hoje é {formattedDate}
+            {formattedDate}
           </p>
         </div>
 

@@ -3,10 +3,13 @@ import { getSession } from "@/lib/auth"
 import prisma from "@/lib/db"
 import { Header } from "@/components/header"
 import { AdminUsersList } from "@/components/admin-users-list"
+import { AdminProductsSold } from "@/components/admin-products-sold"
+import { AdminProfitSummary } from "@/components/admin-profit-summary"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { Settings, DollarSign } from "lucide-react"
+import { formatPrice } from "@/lib/utils"
 
 export default async function AdminPage() {
   const session = await getSession()
@@ -43,6 +46,14 @@ export default async function AdminPage() {
     return sum + consumption.quantity
   }, 0)
 
+  // Get current date in Portuguese format
+  const currentDate = new Date()
+  const monthNames = [
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+  ]
+  const formattedDate = `${currentDate.getDate()} de ${monthNames[currentDate.getMonth()]}`
+
   return (
     <div className="min-h-screen bg-background">
       <Header userName={admin.warName} />
@@ -56,27 +67,17 @@ export default async function AdminPage() {
             </Button>
           </Link>
         </div>
+        <h5 className="text-xl font-bold pb-2">{formattedDate}</h5>
 
-        {/* Profit Summary Card 
+        {/* Profit Summary Card */}
         <div className="mb-8">
-          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-300 dark:to-emerald-200 dark:border-green-400">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2 text-green-800">
-                <DollarSign className="h-5 w-5" />
-                Lucro Total
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-900 mb-2">
-                R$ {formatPrice(totalProfit)}
-              </div>
-              <p className="text-sm text-green-700 dark:text-green-900">
-                Total de {totalQuantitySold} produtos vendidos
-              </p>
-            </CardContent>
-          </Card>
+          <AdminProfitSummary initialProfit={totalProfit} initialQuantity={totalQuantitySold} />
         </div>
-        */}
+
+        {/* Products Sold Section */}
+        <div className="mb-8">
+          <AdminProductsSold adminId={admin.id} />
+        </div>
 
         <AdminUsersList adminId={admin.id} />
       </main>

@@ -385,7 +385,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                               userDetails[user.id].consumptions.length > 0 ? (
                               <div className="mt-4">
                                 <h4 className="font-semibold text-primary mb-2">
-                                  Produtos Comprados
+                                  Pedidos
                                 </h4>
                                 <div className="space-y-2">
                                   {(() => {
@@ -442,7 +442,7 @@ export function AdminUsersList({ adminId }: AdminUsersListProps) {
                             ) : (
                               <div className="text-center py-4">
                                 <p className="text-muted-foreground">
-                                  Nenhum produto comprado
+                                  Nenhum produto solicitado
                                 </p>
                               </div>
                             )}

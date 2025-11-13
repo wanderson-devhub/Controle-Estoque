@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp, Package } from "lucide-react"
@@ -28,28 +28,33 @@ export function AdminProductsSold({ adminId }: AdminProductsSoldProps) {
   const [productsSold, setProductsSold] = useState<ProductSale[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchProductsSold()
-
-    // Set up polling for real-time updates every 2 seconds
-    const interval = setInterval(fetchProductsSold, 2000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  async function fetchProductsSold() {
+  const fetchProductsSold = useCallback(async () => {
     try {
       const response = await fetch("/api/admin/products-sold")
       if (response.ok) {
         const data = await response.json()
-        setProductsSold(data)
+        setProductsSold(prevData => {
+          if (JSON.stringify(data) !== JSON.stringify(prevData)) {
+            return data
+          }
+          return prevData
+        })
       }
     } catch (error) {
       console.error("Error fetching products sold:", error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchProductsSold()
+
+    // Polling disabled to prevent infinite re-rendering
+    // const interval = setInterval(fetchProductsSold, 5000)
+
+    // return () => clearInterval(interval)
+  }, [fetchProductsSold])
 
   if (loading) {
     return (

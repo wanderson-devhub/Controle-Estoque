@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
@@ -22,33 +22,40 @@ export function AdminProfitSummary({ initialProfit, initialQuantity }: AdminProf
   })
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    // Set initial data
-    setProfitData({
-      totalProfit: initialProfit,
-      totalQuantitySold: initialQuantity,
-    })
-
-    // Set up polling for real-time updates every 10 seconds
-    const interval = setInterval(fetchProfitData, 10000)
-
-    return () => clearInterval(interval)
-  }, [initialProfit, initialQuantity])
-
-  async function fetchProfitData() {
+  const fetchProfitData = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/admin/profit")
       if (response.ok) {
         const data = await response.json()
-        setProfitData(data)
+        setProfitData(prevData => {
+          if (JSON.stringify(data) !== JSON.stringify(prevData)) {
+            return data
+          }
+          return prevData
+        })
       }
     } catch (error) {
       console.error("Error fetching profit data:", error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // Set initial data
+    setProfitData({
+      totalProfit: initialProfit,
+      totalQuantitySold: initialQuantity,
+    })
+  }, [initialProfit, initialQuantity])
+
+  useEffect(() => {
+    // Polling disabled to prevent infinite re-rendering
+    // const interval = setInterval(fetchProfitData, 10000)
+
+    // return () => clearInterval(interval)
+  }, [fetchProfitData])
 
   return (
     <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-300 dark:to-emerald-200 dark:border-green-400">

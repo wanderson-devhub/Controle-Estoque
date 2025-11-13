@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { User, LogOut, Moon, Sun, Shield, Bell } from "lucide-react"
+import { User, LogOut, Moon, Sun, Shield, Bell, FileText, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -125,6 +125,14 @@ export function Header({ userName, pixKey }: HeaderProps) {
               <DropdownMenuItem onClick={() => router.push("/profile")} className="hover-lift">
                 <User className="h-4 w-4 mr-2" />
                 Perfil
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/privacy-policy")} className="hover-lift">
+                <ShieldCheck className="h-4 w-4 mr-2" />
+                Política de Privacidade
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/terms-of-use")} className="hover-lift">
+                <FileText className="h-4 w-4 mr-2" />
+                Termos de Uso
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut} className="hover-lift">
                 <LogOut className="h-4 w-4 mr-2" />

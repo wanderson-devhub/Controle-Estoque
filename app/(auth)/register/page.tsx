@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Mail, Lock, User, Briefcase, Phone } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ export default function RegisterPage() {
     company: "",
     phone: "",
   });
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -66,6 +68,12 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    if (!agreeToTerms) {
+      setError("Você deve concordar com os termos de uso e política de privacidade");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -214,6 +222,29 @@ export default function RegisterPage() {
                 {error}
               </div>
             )}
+
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="agreeToTerms"
+                  checked={agreeToTerms}
+                  onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
+                />
+                <label
+                  htmlFor="agreeToTerms"
+                  className="text-sm text-muted-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Concordo com os{" "}
+                  <Link href="/terms-of-use" className="text-primary hover:underline">
+                    Termos de Uso
+                  </Link>{" "}
+                  e{" "}
+                  <Link href="/privacy-policy" className="text-primary hover:underline">
+                    Política de Privacidade
+                  </Link>
+                </label>
+              </div>
+            </div>
 
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? "Cadastrando..." : "Cadastrar"}

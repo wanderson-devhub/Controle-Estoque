@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       data: {
         userId: consumption.product.adminId,
         type: 'purchase_confirmed',
-        message: `${session.warName} confirmou uma compra de ${quantity}x ${consumption.product.name}`,
+        message: `${session.rank} ${session.warName} confirmou uma compra de ${quantity}x ${consumption.product.name}`,
       },
     })
 

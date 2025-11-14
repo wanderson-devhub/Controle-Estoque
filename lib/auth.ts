@@ -6,6 +6,7 @@ const SESSION_COOKIE = "inventory_session"
 export interface SessionUser {
   id: string
   email: string
+  rank: string
   warName: string
   isAdmin: boolean
 }
@@ -15,6 +16,7 @@ export async function createSession(user: User) {
   const sessionData = JSON.stringify({
     id: user.id,
     email: user.email,
+    rank: user.rank,
     warName: user.warName,
     isAdmin: user.isAdmin,
   })
@@ -37,7 +39,7 @@ export async function getSession(): Promise<SessionUser | null> {
     const data = JSON.parse(Buffer.from(session.value, "base64").toString())
     
     // Validate required fields
-    if (!data.id || !data.email || !data.warName || typeof data.isAdmin !== "boolean") {
+    if (!data.id || !data.email  || !data.rank || !data.warName|| typeof data.isAdmin !== "boolean") {
       return null
     }
     
